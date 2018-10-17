@@ -5,6 +5,10 @@ services:
     image: 'bitnami/mongodb:latest'
     volumes:
       - ./database:/bitnami
+    environment:
+      - MONGODB_USERNAME=username
+      - MONGODB_PASSWORD=password
+      - MONGODB_DATABASE=myapp
   nginx:
     image: 'bitnami/nginx:latest'
     ports:
@@ -20,7 +24,7 @@ services:
     environment:
       - PORT=3000
       - NODE_ENV=development
-      - DATABASE_URL=mongodb://mongodb:27017/myapp
+      - DATABASE_URL=mongodb://username:password@mongodb:27017/myapp
       - SKIP_DB_WAIT=0
       - SKIP_DB_MIGRATION=0
       - SKIP_NPM_INSTALL=0

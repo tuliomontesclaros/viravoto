@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
     .addEventListener('click', handleCreateRecord);
 });
 
-const handleCreateRecord = () => {
+const handleCreateRecord = async () => {
   const votes = document.getElementById('record-votes').value;
   const message = document.getElementById('record-message').value;
-  Records.save({votes, message})
+  await Records.save({votes, message})
   updateRecordsCounter();
   updateRecordsList();
 }
