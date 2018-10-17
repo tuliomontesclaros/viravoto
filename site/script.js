@@ -1,9 +1,8 @@
 const RECORDS_URL = 'http://localhost:3000/records'
 
 document.addEventListener('DOMContentLoaded', () => {
-  updateRecordsCounter();
-  updateRecordsList();
-  setInterval(updateRecordsCounter, 3000);
+  updateRecordsResume();
+  setInterval(updateRecordsResume, 3000);
 
   document.getElementById('create-record')
     .addEventListener('click', handleCreateRecord);
@@ -13,19 +12,14 @@ const handleCreateRecord = async () => {
   const votes = document.getElementById('record-votes').value;
   const message = document.getElementById('record-message').value;
   await Records.save({votes, message})
-  updateRecordsCounter();
-  updateRecordsList();
+  updateRecordsResume();
 }
 
-const updateRecordsList = async () => {
-  const records = await Records.find();
-  const elements = records.map(RecordElement);
+const updateRecordsResume = async () => {
+  const resume = await Records.resume();
+  const elements = resume.records.map(RecordElement);
   document.getElementById('records').innerHTML = elements.join('');
-}
-
-const updateRecordsCounter = async () => {
-  const count = await Records.count();
-  document.getElementById('counter').innerHTML = count;
+  document.getElementById('total').innerHTML = resume.total;
 }
 
 const RecordElement = (props) => {
@@ -36,15 +30,10 @@ const RecordElement = (props) => {
 }
 
 const Records = {
-  async find() {
-    const response = await fetch(RECORDS_URL, {method: 'GET'})
+  async resume() {
+    const response = await fetch(`${RECORDS_URL}/resume`, {method: 'GET'})
     const data = await response.json();
     return data;
-  },
-  async count() {
-    const response = await fetch(`${RECORDS_URL}/count`, {method: 'GET'})
-    const data = await response.json();
-    return data.count;
   },
   async save(record){
     await fetch(RECORDS_URL,
