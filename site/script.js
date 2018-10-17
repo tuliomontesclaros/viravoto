@@ -3,7 +3,7 @@ const RECORDS_URL = 'http://localhost:3000/records'
 document.addEventListener('DOMContentLoaded', () => {
   updateRecordsCounter();
   updateRecordsList();
-  setInterval(updateRecordsList, 3000);
+  setInterval(updateRecordsCounter, 3000);
 
   document.getElementById('create-record')
     .addEventListener('click', handleCreateRecord);
@@ -13,7 +13,8 @@ const handleCreateRecord = () => {
   const votes = document.getElementById('record-votes').value;
   const message = document.getElementById('record-message').value;
   Records.save({votes, message})
-  setInterval(updateRecordsCounter, 1000);
+  updateRecordsCounter();
+  updateRecordsList();
 }
 
 const updateRecordsList = async () => {

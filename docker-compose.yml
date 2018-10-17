@@ -3,6 +3,8 @@ version: '2'
 services:
   mongodb:
     image: 'bitnami/mongodb:latest'
+    volumes:
+      - ./database:/bitnami
   nginx:
     image: 'bitnami/nginx:latest'
     ports:
