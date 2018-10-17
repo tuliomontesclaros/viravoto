@@ -4,7 +4,7 @@ var createError = require('http-errors');
 var Record = require('../models/record');
 
 router.get('/', function(req, res, next) {
-  Record.find()
+  Record.find().sort('-createdAt').limit(10)
     .then((records) => res.send(records))
     .catch(() => createError(500));
 });
@@ -12,6 +12,12 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res, next) {
   new Record(req.body).save()
     .then((record) => res.send(record))
+    .catch(() => createError(500));
+});
+
+router.get('/count', function(req, res, next) {
+  Record.estimatedDocumentCount()
+    .then((count) => res.send({count}))
     .catch(() => createError(500));
 });
 

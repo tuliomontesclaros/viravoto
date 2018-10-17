@@ -1,8 +1,9 @@
 const RECORDS_URL = 'http://localhost:3000/records'
 
 document.addEventListener('DOMContentLoaded', () => {
+  updateRecordsCounter();
   updateRecordsList();
-  setInterval(updateRecordsList, 1000);
+  setInterval(updateRecordsList, 3000);
 
   document.getElementById('create-record')
     .addEventListener('click', handleCreateRecord);
@@ -11,31 +12,19 @@ document.addEventListener('DOMContentLoaded', () => {
 const handleCreateRecord = () => {
   const votes = document.getElementById('record-votes').value;
   const message = document.getElementById('record-message').value;
-  createRecord({votes, message})
+  Records.save({votes, message})
+  setInterval(updateRecordsCounter, 1000);
 }
 
 const updateRecordsList = async () => {
-  const records = await findRecords();
+  const records = await Records.find();
   const elements = records.map(RecordElement);
   document.getElementById('records').innerHTML = elements.join('');
 }
 
-const createRecord = async (record) => {
-  await fetch(RECORDS_URL,
-    {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(record)
-    })
-}
-
-const findRecords = async () => {
-  const response = await fetch(RECORDS_URL, {method: 'GET'})
-  const data = await response.json();
-  return data;
+const updateRecordsCounter = async () => {
+  const count = await Records.count();
+  document.getElementById('counter').innerHTML = count;
 }
 
 const RecordElement = (props) => {
@@ -43,4 +32,28 @@ const RecordElement = (props) => {
     <span>${props.votes}</span>
     <span>${props.message}</span>
   </div>`
+}
+
+const Records = {
+  async find() {
+    const response = await fetch(RECORDS_URL, {method: 'GET'})
+    const data = await response.json();
+    return data;
+  },
+  async count() {
+    const response = await fetch(`${RECORDS_URL}/count`, {method: 'GET'})
+    const data = await response.json();
+    return data.count;
+  },
+  async save(record){
+    await fetch(RECORDS_URL,
+      {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(record)
+      })
+  }
 }
