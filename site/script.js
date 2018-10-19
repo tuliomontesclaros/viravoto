@@ -1,49 +1,41 @@
-const RECORDS_URL = 'http://localhost:3000/records'
+const BACKEND_URL = 'http://localhost:3000'
+const colors = ["#ffa726", "#F44336", "#2196F3", "#8BC34A", "#FF9800", "#8BC34A", "#009688", "#8BC34A" ]
+let flipped = false;
+let count = 0;
 
-document.addEventListener('DOMContentLoaded', () => {
-  updateRecordsResume();
-  setInterval(updateRecordsResume, 3000);
+$(document).ready(() => {
+  $('.card').flip();
 
-  document.getElementById('create-record')
-    .addEventListener('click', handleCreateRecord);
+  fillCard();
+  $('.card').on('click', handleFlip);
 });
 
-const handleCreateRecord = async () => {
-  const votes = document.getElementById('record-votes').value;
-  const message = document.getElementById('record-message').value;
-  await Records.save({votes, message})
-  updateRecordsResume();
+const handleFlip = () => {
+  flipped = !flipped;
+  fillCard()
+  $('.card').flip(flipped);
 }
 
-const updateRecordsResume = async () => {
-  const resume = await Records.resume();
-  const elements = resume.records.map(RecordElement);
-  document.getElementById('records').innerHTML = elements.join('');
-  document.getElementById('total').innerHTML = resume.total;
+const fillCard = () => {
+  if (flipped) {
+    fill($('.back'));
+  } else {
+    fill($('.front'));
+  }
 }
 
-const RecordElement = (props) => {
-  return `<div>
-    <span>${props.votes}</span>
-    <span>${props.message}</span>
-  </div>`
+const fill = async (card) => {
+  const {record: {message}, total} = await Records.turns();
+  card.find('.total').text(total);
+  card.find('.message').text(message);
+  card.css('background-color', colors[count % colors.length]);
+  count = count + 1;
 }
 
 const Records = {
-  async resume() {
-    const response = await fetch(`${RECORDS_URL}/resume`, {method: 'GET'})
+  async turns() {
+    const response = await fetch(`${BACKEND_URL}/turns`, {method: 'POST'})
     const data = await response.json();
     return data;
-  },
-  async save(record){
-    await fetch(RECORDS_URL,
-      {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(record)
-      })
   }
 }

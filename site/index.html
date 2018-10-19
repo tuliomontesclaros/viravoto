@@ -3,15 +3,33 @@
   <head>
     <link rel="stylesheet" href="style.css">
     <title>@viravoto</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
     <script src="script.js"></script>
   </head>
   <body>
-    <span><span id="total"></span> virados</span>
-    <div>
-      <input id="record-votes" type="number" min=1 max=5></input>
-      <input id="record-message" type="text"></input>
-      <button id="create-record">Virar!</button>
+    <h1>@viravoto</h1>
+    <div class="card">
+      <div class="front">
+        <div class="content">
+          <div class="header">
+            <label class="total"></label>
+            <label>virados</label>
+          </div>
+          <label class="message"></label>
+          <label>Clique pra virar outro voto!</label>
+        </div>
+      </div>
+      <div class="back">
+        <div class="content">
+          <div class="header">
+            <label class="total"></label>
+            <label>virados</label>
+          </div>
+          <label class="message"></label>
+          <label>Clique pra virar outro voto!</label>
+        </div>
+      </div>
     </div>
-    <div id="records"></div>
   </body>
 </html>

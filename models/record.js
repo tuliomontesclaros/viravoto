@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
+const random = require('mongoose-simple-random');
 mongoose.connect(process.env.DATABASE_URL);
 
 const schema = mongoose.Schema(
   {
-    votes: Number,
     message: String
   },
   {
@@ -11,6 +11,7 @@ const schema = mongoose.Schema(
   }
 )
 
+schema.plugin(random);
 const Record = mongoose.model('Record', schema);
 
 module.exports = Record;
